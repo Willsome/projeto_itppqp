@@ -2,10 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SAIR 7
+#define SAIR 8
 
 void mostraMenu();
 void pegaOpcaoUsuario(int *opcao);
+
+typedef struct {
+	int R;
+	int G;
+	int B;
+} Pixel;
 
 int main() {
 
@@ -32,6 +38,41 @@ int main() {
 			// + Nome da variável: opcao
 			pegaOpcaoUsuario(&opcao);
 
+			long cont = 0;
+			char dados[1000];
+
+			char formato_textual[30];
+			char tamanho_imagem[30];
+			char nivel_qualidade_imagem[5];
+
+			switch(opcao) {
+				case 1:
+					
+					while(fgets(dados, sizeof(dados), arquivo_imagem) != NULL) {
+						//printf("=== %s\n", dados);
+						cont++;
+
+						if(cont == 1) {
+							strcpy(formato_textual, dados);
+						} else if(cont == 2) {
+							strcpy(tamanho_imagem, dados);
+						} else if(cont == 3) {
+							strcpy(nivel_qualidade_imagem, dados);
+							break;
+						}
+					}
+
+					printf("Formato textual: %s\n", formato_textual);
+					printf("Tamanho da imagem: %s\n", tamanho_imagem);
+					printf("Nivel de qualidade da imagem: %s\n", nivel_qualidade_imagem);
+
+					fclose(arquivo_imagem);
+					break;
+
+				default:
+					break;
+			}
+
 		} while(opcao != SAIR);
 	}
 
@@ -44,11 +85,14 @@ void pegaOpcaoUsuario(int *opcao) {
 }
 
 void mostraMenu() {
-	printf("1 - Binarização usando thresholding\n");
-	printf("2 - Blurring\n");
-	printf("3 - Executa sharpening\n");
-	printf("4 - Rotação da imagem\n");
-	printf("5 - Ampliar a imagem\n");
-	printf("6 - Reduzir a imagem\n");
-	printf("7 - Sair\n");
+	printf("\n");
+	printf("1 - Deixar a imagem cinza\n");
+	printf("2 - Binarizacao usando thresholding\n");
+	printf("3 - Blurring\n");
+	printf("4 - Executa sharpening\n");
+	printf("5 - Rotacao da imagem\n");
+	printf("6 - Ampliar a imagem\n");
+	printf("7 - Reduzir a imagem\n");
+	printf("8 - Sair\n");
+	printf("\n");
 }
