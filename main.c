@@ -13,6 +13,10 @@ typedef struct {
 	int B;
 } Pixel;
 
+typedef struct {
+	Pixel *pixeis;
+} Imagem;
+
 int main() {
 
 	char nome_imagem[50];
@@ -32,48 +36,105 @@ int main() {
 
 	} else {
 
+		long linha_atual = 0;
+		char dados[20];
+
+		char formato_textual[30];
+		char tamanho_imagem[30];
+		char nivel_qualidade_imagem[5];
+
+		Imagem imagem;
+		imagem.pixeis = (Pixel*) malloc(1000000 * sizeof(Pixel));
+		memset(imagem.pixeis, 0, 10 * sizeof(Pixel));
+		long pixel_posicao_atual = 0;
+		
+		Pixel pixel;
+		int cor_linha_atual = 1;
+
+		int grayscale_media;
+
+		FILE *arquivo_imagem_grayscale = fopen("aig.ppm", "w+");
+
 		do {
 			// Pega a opção do usuário passando o endereço
 			// da variável que vai ser armazenada a opção
 			// + Nome da variável: opcao
 			pegaOpcaoUsuario(&opcao);
 
-			long cont = 0;
-			char dados[1000];
-
-			char formato_textual[30];
-			char tamanho_imagem[30];
-			char nivel_qualidade_imagem[5];
-
 			switch(opcao) {
 				case 1:
 					
 					while(fgets(dados, sizeof(dados), arquivo_imagem) != NULL) {
 						//printf("=== %s\n", dados);
-						cont++;
+						linha_atual++;
 
-						if(cont == 1) {
+						if(linha_atual == 1) {
 							strcpy(formato_textual, dados);
-						} else if(cont == 2) {
+							fprintf(arquivo_imagem_grayscale, "%s", dados);
+						} else if(linha_atual == 2) {
 							strcpy(tamanho_imagem, dados);
-						} else if(cont == 3) {
+							fprintf(arquivo_imagem_grayscale, "%s", dados);
+						} else if(linha_atual == 3) {
 							strcpy(nivel_qualidade_imagem, dados);
-							break;
+							fprintf(arquivo_imagem_grayscale, "%s", dados);
+						} else {
+
+							switch(cor_linha_atual) {
+								case 1:
+									pixel.R = atoi(dados);
+									cor_linha_atual++;
+									break;
+								case 2:
+									pixel.G = atoi(dados);
+									cor_linha_atual++;
+									break;
+								case 3:
+									pixel.B = atoi(dados);
+									cor_linha_atual = 1;
+									// printf("%d\n", pixel_posicao_atual);
+									imagem.pixeis[pixel_posicao_atual] = pixel;
+									pixel_posicao_atual++;
+									break;
+							}
 						}
 					}
 
-					printf("Formato textual: %s\n", formato_textual);
-					printf("Tamanho da imagem: %s\n", tamanho_imagem);
-					printf("Nivel de qualidade da imagem: %s\n", nivel_qualidade_imagem);
-
-					fclose(arquivo_imagem);
 					break;
 
 				default:
+					printf("%d\n", pixel_posicao_atual);
+					for (int i = 0; i < pixel_posicao_atual; ++i) {
+						printf("==[%d] RGB(%d, %d, %d)\n",
+							i,
+							imagem.pixeis[i].R,
+							imagem.pixeis[i].G,
+							imagem.pixeis[i].B
+						);
+
+						grayscale_media = (imagem.pixeis[i].R + imagem.pixeis[i].G + imagem.pixeis[i].B) / 3;
+						imagem.pixeis[i].R =grayscale_media;
+						imagem.pixeis[i].G = grayscale_media;
+						imagem.pixeis[i].B= grayscale_media;
+
+						printf("==[%d] RGB(%d, %d, %d)\n",
+							i,
+							imagem.pixeis[i].R,
+							imagem.pixeis[i].G,
+							imagem.pixeis[i].B
+						);
+
+						fprintf(arquivo_imagem_grayscale, "%d\n", imagem.pixeis[i].R);
+						fprintf(arquivo_imagem_grayscale, "%d\n", imagem.pixeis[i].G);
+						fprintf(arquivo_imagem_grayscale, "%d\n", imagem.pixeis[i].B);
+					}
+
+					fclose(arquivo_imagem_grayscale);
 					break;
 			}
 
 		} while(opcao != SAIR);
+
+		free(imagem.pixeis);
 	}
 
 	return 0;
