@@ -7,7 +7,9 @@
 #include "../../structs/typedefs.h"
 
 void deixaImagemEmGrayscale(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho);
-void adicionaCabecalhoNaImagem(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho);
-void aplicaPixeisEmCinzaNaImagemNova(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho, Imagem imagem);
+FILE* criaArquivoImagemGrayscale(char nome_imagem[50]);
+void aplicaPixeisEmCinzaNoArquivoImagemGrayscale(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho, Imagem imagem);
+void mensagemErroCriacaoImagemGrayscale();
+void mensagemSucessoCriacaoImagemGrayscale();
 
 #endif

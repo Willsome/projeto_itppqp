@@ -1,8 +1,19 @@
 #include "funcoes_grayscale.h"
+#include "../funcoes_gerais/funcoes_gerais.h"
 #include "../../constantes/constantes.h"
 
 void deixaImagemEmGrayscale(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 
+	FILE *arquivo_imagem_grayscale = criaArquivoImagemGrayscale(nome_imagem);
+
+	adicionaCabecalhoNaImagem(arquivo_imagem_grayscale, cabecalho);
+
+	aplicaPixeisEmCinzaNoArquivoImagemGrayscale(arquivo_imagem_grayscale, cabecalho, imagem);
+
+	mensagemSucessoCriacaoImagemGrayscale();
+}
+
+FILE* criaArquivoImagemGrayscale(char nome_imagem[50]) {
 	// Caminho da imagem + extensão
 	char path_imagem[] = "imagens/grayscale/";
 	char extensao_ppm[] = "_grayscale.ppm";
@@ -15,32 +26,14 @@ void deixaImagemEmGrayscale(char nome_imagem[50], Imagem imagem, Cabecalho cabec
 
 	// Nova imagem criada para receber a anterior com a escala de cinza aplicada
 	FILE *arquivo_imagem_grayscale = fopen(nome_imagem_ppm_grayscale, "w+");
+	if (arquivo_imagem_grayscale == NULL) {
+		mensagemErroCriacaoImagemGrayscale();
+	}
 
-	adicionaCabecalhoNaImagem(arquivo_imagem_grayscale, cabecalho);
-
-	// Cria imagem PPM nova em escala de cinza
-	aplicaPixeisEmCinzaNaImagemNova(arquivo_imagem_grayscale, cabecalho, imagem);
-
-	printf("|\n");
-	printf("+---------------------------------------------+\n");
-	printf("|   Imagem em grayscale salva com sucesso !   |\n");
-	printf("+---------------------------------------------+\n");
+	return arquivo_imagem_grayscale;
 }
 
-void adicionaCabecalhoNaImagem(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho) {
-	
-	fprintf(arquivo_imagem_grayscale, "%s", cabecalho.formato_textual);
-
-	char tamanho_imagem[12] = "";
-	strcat(tamanho_imagem, cabecalho.tamanho_imagem_largura);
-	strcat(tamanho_imagem, " ");
-	strcat(tamanho_imagem, cabecalho.tamanho_imagem_altura);
-	fprintf(arquivo_imagem_grayscale, "%s", tamanho_imagem);
-	
-	fprintf(arquivo_imagem_grayscale, "%s", cabecalho.nivel_qualidade_imagem);
-}
-
-void aplicaPixeisEmCinzaNaImagemNova(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho, Imagem imagem) {
+void aplicaPixeisEmCinzaNoArquivoImagemGrayscale(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho, Imagem imagem) {
 
 	// Variável que armazenará a média tirada dos valores RGB para saber qual escala de cinza
 	// será aplicada
@@ -66,4 +59,19 @@ void aplicaPixeisEmCinzaNaImagemNova(FILE *arquivo_imagem_grayscale, Cabecalho c
 
 	// Fecha o(a) arquivo/imagem grayscale PPM
 	fclose(arquivo_imagem_grayscale);
+}
+
+void mensagemErroCriacaoImagemGrayscale() {
+	printf("|\n");
+	printf("+------------------------------------+\n");
+	printf("|   Erro ao criar imagem grayscale   |\n");
+	printf("+------------------------------------+\n");
+	exit(1);
+}
+
+void mensagemSucessoCriacaoImagemGrayscale() {
+	printf("|\n");
+	printf("+---------------------------------------------+\n");
+	printf("|   Imagem em grayscale salva com sucesso !   |\n");
+	printf("+---------------------------------------------+\n");
 }

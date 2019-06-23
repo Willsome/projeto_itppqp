@@ -17,13 +17,16 @@ FILE* pegaImagemPeloNome(char nome_imagem[50]) {
 	strcat(nome_imagem_ppm, nome_imagem);
 	strcat(nome_imagem_ppm, extensao_ppm);
 
-	// Faz a leitura da imagem baseada no nome e retorna para quem chamou a função
 	return fopen(nome_imagem_ppm, "r+");
 }
 
-void pegaOpcaoUsuario(int *opcao) {
+int pegaOpcaoUsuario() {
 	mostraMenu();
-	scanf("%d", opcao);
+
+	int opcao;
+	scanf("%d", &opcao);
+
+	return opcao;
 }
 
 void mostraMenu() {
@@ -121,23 +124,15 @@ void alocaPixelsDaImagem(Imagem *imagem, Cabecalho *cabecalho) {
 
 	imagem->pixels = (Pixel**) malloc(altura_imagem * sizeof(Pixel*));
 	if (imagem->pixels == NULL) {
-		erroAlocacaoPixel();
+		mensagemErroAlocacaoPixel();
 	}
 
 	for (int i = 0; i < altura_imagem; i++) {
 		imagem->pixels[i] = (Pixel*) malloc(largura_imagem * sizeof(Pixel));
 		if (imagem->pixels == NULL) {
-			erroAlocacaoPixel();
+			mensagemErroAlocacaoPixel();
 		}
 	}
-}
-
-void erroAlocacaoPixel() {
-	printf("|\n");
-	printf("+-----------------------------------------+\n");
-	printf("|   Ocorreu um erro ao alocar os pixels   |\n");
-	printf("+-----------------------------------------+\n");
-	exit(1);
 }
 
 void preencheImagemComRGB(char dados[20], Cabecalho *cabecalho, Imagem *imagem,
@@ -180,4 +175,32 @@ void preencheImagemComRGB(char dados[20], Cabecalho *cabecalho, Imagem *imagem,
 
 			break;
 	}
+}
+
+void adicionaCabecalhoNaImagem(FILE *arquivo_imagem, Cabecalho cabecalho) {
+	
+	fprintf(arquivo_imagem, "%s", cabecalho.formato_textual);
+
+	char tamanho_imagem[12] = "";
+	strcat(tamanho_imagem, cabecalho.tamanho_imagem_largura);
+	strcat(tamanho_imagem, " ");
+	strcat(tamanho_imagem, cabecalho.tamanho_imagem_altura);
+	fprintf(arquivo_imagem, "%s", tamanho_imagem);
+	
+	fprintf(arquivo_imagem, "%s", cabecalho.nivel_qualidade_imagem);
+}
+
+void mensagemErroAlocacaoPixel() {
+	printf("|\n");
+	printf("+-----------------------------------------+\n");
+	printf("|   Ocorreu um erro ao alocar os pixels   |\n");
+	printf("+-----------------------------------------+\n");
+	exit(1);
+}
+
+void mensagemErroOpcaoInvalida() {
+	printf("|\n");
+	printf("+----------------------+\n");
+	printf("|   Opcao invalida !   |\n");
+	printf("+----------------------+\n");
 }

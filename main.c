@@ -6,6 +6,9 @@
 #include "modulos/structs/typedefs.h"
 #include "modulos/funcoes/funcoes_gerais/funcoes_gerais.h"
 #include "modulos/funcoes/funcoes_grayscale/funcoes_grayscale.h"
+#include "modulos/funcoes/funcoes_rotacao/funcoes_rotacao.h"
+
+void mensagemErroAberturaImagem();
 
 int main() {
 
@@ -15,30 +18,25 @@ int main() {
 	// Variável que armazenará o arquivo da imagem
 	FILE *arquivo_imagem = pegaImagemPeloNome(nome_imagem);
 
-	// Variável que armazenará o cabeçalho da imagem PPM
-	Cabecalho cabecalho;
-
-	// Variável que armazenará a imagem PPM
-	Imagem imagem;
-
 	if (arquivo_imagem == NULL){
-		printf("|\n");
-		printf("+-------------------------------------+\n");
-		printf("|   A imagem informada nao existe !   |\n");
-		printf("+-------------------------------------+\n");
-		return 1;
+		mensagemErroAberturaImagem();
 
 	} else {
 
-		int opcao = 0;
+		// Variável que armazenará o cabeçalho da imagem PPM
+		Cabecalho cabecalho;
 
+		// Variável que armazenará a imagem PPM
+		Imagem imagem;
+
+		// Através do arquivo da imagem, cria uma struct Imagem com as informações do arquivo
+		preencheStructsCabecalhoImagem(arquivo_imagem, &cabecalho, &imagem);
+
+		int opcao;
 		do {
 
-			// Através do arquivo da imagem, cria uma struct Imagem com as informações do arquivo
-			preencheStructsCabecalhoImagem(arquivo_imagem, &cabecalho, &imagem);
-
-			// Pega a opção do usuário e coloca na variáve "opcao"
-			pegaOpcaoUsuario(&opcao);
+			// Pega a opção do usuário
+			opcao = pegaOpcaoUsuario();
 
 			switch(opcao) {
 
@@ -47,17 +45,14 @@ int main() {
 					break;
 
 				case 2:
-
+					rotacionaImagem(nome_imagem, imagem, cabecalho);
 					break;
 
 				case 8:
 					break;
 
 				default:
-					printf("|\n");
-					printf("+----------------------+\n");
-					printf("|   Opcao invalida !   |\n");
-					printf("+----------------------+\n");
+					mensagemErroOpcaoInvalida();
 					break;
 			}
 
@@ -65,4 +60,12 @@ int main() {
 	}
 
 	return 0;
+}
+
+void mensagemErroAberturaImagem() {
+	printf("|\n");
+	printf("+-------------------------------------+\n");
+	printf("|   A imagem informada nao existe !   |\n");
+	printf("+-------------------------------------+\n");
+	exit(1);
 }
