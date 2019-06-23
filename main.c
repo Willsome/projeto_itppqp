@@ -9,10 +9,17 @@
 
 int main() {
 
+	// Variável com o nome da imagem
 	char nome_imagem[50];
 
-	FILE *arquivo_imagem;
-	arquivo_imagem = pegaImagemPeloNome(nome_imagem);
+	// Variável que armazenará o arquivo da imagem
+	FILE *arquivo_imagem = pegaImagemPeloNome(nome_imagem);
+
+	// Variável que armazenará o cabeçalho da imagem PPM
+	Cabecalho cabecalho;
+
+	// Variável que armazenará a imagem PPM
+	Imagem imagem;
 
 	if (arquivo_imagem == NULL){
 		printf("|\n");
@@ -26,15 +33,21 @@ int main() {
 		int opcao = 0;
 
 		do {
-			// Pega a opção do usuário passando o endereço
-			// da variável que vai ser armazenada a opção
-			// + Nome da variável: opcao
+
+			// Através do arquivo da imagem, cria uma struct Imagem com as informações do arquivo
+			preencheStructsCabecalhoImagem(arquivo_imagem, &cabecalho, &imagem);
+
+			// Pega a opção do usuário e coloca na variáve "opcao"
 			pegaOpcaoUsuario(&opcao);
 
 			switch(opcao) {
-				
+
 				case 1:
-					deixaImagemEmGrayscale(arquivo_imagem, nome_imagem);
+					deixaImagemEmGrayscale(nome_imagem, imagem, cabecalho);
+					break;
+
+				case 2:
+
 					break;
 
 				case 8:
