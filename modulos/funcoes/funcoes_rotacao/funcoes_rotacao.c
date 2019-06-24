@@ -1,48 +1,113 @@
 #include "funcoes_rotacao.h"
 
 void rotacionaImagem(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
-
-	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
-
-	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem);
 	
 	int rotacao = pegaRotacaoUsuario();
-
-	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
-	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
-
-	int tamanho_largura_nova = tamanho_largura_original;
-	int tamanho_altura_nova = 0;
 
 	switch(rotacao) {
 
 		case 90:
+			rotaciona90(nome_imagem, imagem, cabecalho);
+			break;
 
-			adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
+		case 180:
+			rotaciona180(nome_imagem, imagem, cabecalho);
+			break;
 
-			for (int i = 0; i < tamanho_largura_original; i++) {
-				for (int j = 0; j < tamanho_altura_original; j++) {
-
-					fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova-1].R);
-					fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova-1].G);
-					fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova-1].B);
-
-					tamanho_altura_nova++;
-				}
-
-				tamanho_altura_nova = 0;
-				tamanho_largura_nova--;
-			}
-
-			mensagemSucessoRotacaoImagem();
+		case 270:
+			rotaciona270(nome_imagem, imagem, cabecalho);
 			break;
 
 		default:
 			mensagemErroOpcaoInvalida();
 			break;
 	}
+}
+
+void rotaciona90(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
+
+	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
+	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
+
+	int tamanho_largura_nova = tamanho_largura_original-1;
+	int tamanho_altura_nova = 0;
+
+	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, "90");
+
+	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
+	adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
+
+	for (int i = 0; i < tamanho_largura_original; i++) {
+		for (int j = 0; j < tamanho_altura_original; j++) {
+			gravaRGB(arquivo_imagem_rotacionada, imagem, tamanho_altura_nova, tamanho_largura_nova);
+			tamanho_altura_nova++;
+		}
+
+		tamanho_altura_nova = 0;
+		tamanho_largura_nova--;
+	}
 
 	fclose(arquivo_imagem_rotacionada);
+	mensagemSucessoRotacaoImagem();
+}
+
+void rotaciona180(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
+
+	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
+	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
+
+	int tamanho_largura_nova = tamanho_largura_original-1;
+	int tamanho_altura_nova = tamanho_altura_original-1;
+
+	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, "180");
+
+	adicionaCabecalhoNaImagem(arquivo_imagem_rotacionada, cabecalho);
+
+	for (int i = 0; i < tamanho_altura_original; i++) {
+		for (int j = 0; j < tamanho_largura_original; j++) {
+			gravaRGB(arquivo_imagem_rotacionada, imagem, tamanho_altura_nova, tamanho_largura_nova);
+			tamanho_largura_nova--;
+		}
+
+		tamanho_largura_nova = tamanho_largura_original-1;
+		tamanho_altura_nova--;
+	}
+
+	fclose(arquivo_imagem_rotacionada);
+	mensagemSucessoRotacaoImagem();
+}
+
+void rotaciona270(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
+
+	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
+	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
+
+	int tamanho_largura_nova = 0;
+	int tamanho_altura_nova = tamanho_altura_original-1;
+
+	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, "270");
+
+	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
+	adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
+
+	for (int i = 0; i < tamanho_largura_original; i++) {
+		for (int j = 0; j < tamanho_altura_original; j++) {
+			gravaRGB(arquivo_imagem_rotacionada, imagem, tamanho_altura_nova, tamanho_largura_nova);
+			tamanho_altura_nova--;
+		}
+
+		tamanho_altura_nova = tamanho_altura_original-1;
+		tamanho_largura_nova++;
+	}
+
+	fclose(arquivo_imagem_rotacionada);
+	mensagemSucessoRotacaoImagem();
+}
+
+void gravaRGB(FILE *arquivo_imagem_rotacionada, Imagem imagem, int tamanho_altura_nova, int tamanho_largura_nova) {
+	fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova].R);
+	fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova].G);
+	fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova].B);
 }
 
 Cabecalho criaCabecalhoComDimensoesInvertidas(Cabecalho cabecalho) {
@@ -65,16 +130,19 @@ Cabecalho criaCabecalhoComDimensoesInvertidas(Cabecalho cabecalho) {
 	return cabecalho_novo;
 }
 
-FILE* criaArquivoImagemRotacionada(char nome_imagem[50]) {
+FILE* criaArquivoImagemRotacionada(char nome_imagem[50], char rotacao[5]) {
 
 	// Caminho da imagem + extensão
 	char path_imagem[] = "imagens/rotacionada/";
-	char extensao_ppm[] = "_rotacionada90.ppm";
+	char sufixo_imagem[20] = "_rotacionada";
+	strcat(sufixo_imagem, rotacao);
+	char extensao_ppm[] = ".ppm";
 
 	// Variável com o nome da imagem (caminho + nome + extensão)
 	char nome_imagem_ppm_rotacionada[70] = "";
 	strcat(nome_imagem_ppm_rotacionada, path_imagem);
 	strcat(nome_imagem_ppm_rotacionada, nome_imagem);
+	strcat(nome_imagem_ppm_rotacionada, sufixo_imagem);
 	strcat(nome_imagem_ppm_rotacionada, extensao_ppm);
 
 	FILE *arquivo_imagem_rotacionada = fopen(nome_imagem_ppm_rotacionada, "w+");
