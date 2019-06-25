@@ -9,4 +9,14 @@
 #define GREEN 2
 #define BLUE 3
 
+#define ROTACAO_90 "90"
+#define ROTACAO_180 "180"
+#define ROTACAO_270 "270"
+
+#define PASTA_IMAGEM_GRAYSCALE "grayscale"
+#define SUFIXO_IMAGEM_GRAYSCALE "_grayscale"
+
+#define PASTA_IMAGEM_AMPLIADA "ampliada"
+#define SUFIXO_IMAGEM_AMPLIADA "_ampliada"
+
 #endif

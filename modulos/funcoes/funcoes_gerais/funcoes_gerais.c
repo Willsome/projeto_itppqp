@@ -31,12 +31,12 @@ int pegaOpcaoUsuario() {
 
 void mostraMenu() {
 	printf("\n");
-	printf("1 - Deixar a imagem cinza\n");
-	printf("2 - Rotacao da imagem\n");
-	printf("3 - Binarizacao usando thresholding\n");
-	printf("3 - Blurring\n");
-	printf("4 - Executa sharpening\n");
-	printf("6 - Ampliar a imagem\n");
+	printf("1 - Transformar em escala de cinza\n");
+	printf("2 - Rotacionar (anti-horario)\n");
+	printf("3 - Ampliar\n");
+	printf("4 - Binarizacao usando thresholding\n");
+	printf("5 - Blurring\n");
+	printf("6 - Executa sharpening\n");
 	printf("7 - Reduzir a imagem\n");
 	printf("8 - Sair\n");
 	printf("\n");
@@ -177,6 +177,36 @@ void preencheImagemComRGB(char dados[20], Cabecalho *cabecalho, Imagem *imagem,
 	}
 }
 
+FILE* criaArquivoImagem(char nome_imagem[50], char pasta_imagem[50], char sufixo_imagem[50]) {
+	
+	// Caminho da imagem + extensão
+	char path_imagem[] = "imagens/";
+	strcat(path_imagem, pasta_imagem);
+	strcat(path_imagem, "/");
+
+	char extensao_ppm[] = ".ppm";
+
+	// Variável com o nome da imagem (caminho + nome + extensão)
+	char nome_imagem_ppm[70] = "";
+	strcat(nome_imagem_ppm, path_imagem);
+	strcat(nome_imagem_ppm, nome_imagem);
+	strcat(nome_imagem_ppm, sufixo_imagem);
+	strcat(nome_imagem_ppm, extensao_ppm);
+
+	// Nova imagem criada para receber a anterior com a escala de cinza aplicada
+	FILE *arquivo_imagem = fopen(nome_imagem_ppm, "w+");
+	if (arquivo_imagem == NULL) {
+		if (strcmp(pasta_imagem, PASTA_IMAGEM_GRAYSCALE) == 0) {
+			mensagemErroCriacaoImagemGrayscale();	
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_AMPLIADA) == 0) {
+			mensagemErroCriacaoImagemAmpliada();
+		}
+	}
+
+	return arquivo_imagem;
+}
+
 void adicionaCabecalhoNaImagem(FILE *arquivo_imagem, Cabecalho cabecalho) {
 	
 	fprintf(arquivo_imagem, "%s", cabecalho.formato_textual);
@@ -190,12 +220,18 @@ void adicionaCabecalhoNaImagem(FILE *arquivo_imagem, Cabecalho cabecalho) {
 	fprintf(arquivo_imagem, "%s", cabecalho.nivel_qualidade_imagem);
 }
 
-void mensagemErroAlocacaoPixel() {
-	printf("|\n");
-	printf("+-----------------------------------------+\n");
-	printf("|   Ocorreu um erro ao alocar os pixels   |\n");
-	printf("+-----------------------------------------+\n");
-	exit(1);
+void adicionaCabecalhoNovoNaImagem(FILE *arquivo_imagem, Cabecalho cabecalho) {
+
+	fprintf(arquivo_imagem, "%s", cabecalho.formato_textual);
+
+	char tamanho_imagem[12] = "";
+	strcat(tamanho_imagem, cabecalho.tamanho_imagem_largura);
+	strcat(tamanho_imagem, " ");
+	strcat(tamanho_imagem, cabecalho.tamanho_imagem_altura);
+	strcat(tamanho_imagem, "\n");
+	fprintf(arquivo_imagem, "%s", tamanho_imagem);
+	
+	fprintf(arquivo_imagem, "%s", cabecalho.nivel_qualidade_imagem);
 }
 
 void mensagemErroOpcaoInvalida() {
@@ -203,4 +239,12 @@ void mensagemErroOpcaoInvalida() {
 	printf("+----------------------+\n");
 	printf("|   Opcao invalida !   |\n");
 	printf("+----------------------+\n");
+}
+
+void mensagemErroAlocacaoPixel() {
+	printf("|\n");
+	printf("+-----------------------------------------+\n");
+	printf("|   Ocorreu um erro ao alocar os pixels   |\n");
+	printf("+-----------------------------------------+\n");
+	exit(1);
 }

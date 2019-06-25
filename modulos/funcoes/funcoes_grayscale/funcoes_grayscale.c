@@ -1,36 +1,12 @@
 #include "funcoes_grayscale.h"
-#include "../funcoes_gerais/funcoes_gerais.h"
-#include "../../constantes/constantes.h"
 
 void deixaImagemEmGrayscale(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 
-	FILE *arquivo_imagem_grayscale = criaArquivoImagemGrayscale(nome_imagem);
+	FILE *arquivo_imagem_grayscale = criaArquivoImagem(nome_imagem, PASTA_IMAGEM_GRAYSCALE, SUFIXO_IMAGEM_GRAYSCALE);
 
 	adicionaCabecalhoNaImagem(arquivo_imagem_grayscale, cabecalho);
 
 	aplicaPixeisEmCinzaNoArquivoImagemGrayscale(arquivo_imagem_grayscale, cabecalho, imagem);
-
-	mensagemSucessoCriacaoImagemGrayscale();
-}
-
-FILE* criaArquivoImagemGrayscale(char nome_imagem[50]) {
-	// Caminho da imagem + extensão
-	char path_imagem[] = "imagens/grayscale/";
-	char extensao_ppm[] = "_grayscale.ppm";
-
-	// Variável com o nome da imagem (caminho + nome + extensão)
-	char nome_imagem_ppm_grayscale[70] = "";
-	strcat(nome_imagem_ppm_grayscale, path_imagem);
-	strcat(nome_imagem_ppm_grayscale, nome_imagem);
-	strcat(nome_imagem_ppm_grayscale, extensao_ppm);
-
-	// Nova imagem criada para receber a anterior com a escala de cinza aplicada
-	FILE *arquivo_imagem_grayscale = fopen(nome_imagem_ppm_grayscale, "w+");
-	if (arquivo_imagem_grayscale == NULL) {
-		mensagemErroCriacaoImagemGrayscale();
-	}
-
-	return arquivo_imagem_grayscale;
 }
 
 void aplicaPixeisEmCinzaNoArquivoImagemGrayscale(FILE *arquivo_imagem_grayscale, Cabecalho cabecalho, Imagem imagem) {
@@ -59,6 +35,14 @@ void aplicaPixeisEmCinzaNoArquivoImagemGrayscale(FILE *arquivo_imagem_grayscale,
 
 	// Fecha o(a) arquivo/imagem grayscale PPM
 	fclose(arquivo_imagem_grayscale);
+	mensagemSucessoCriacaoImagemGrayscale();
+}
+
+void mensagemSucessoCriacaoImagemGrayscale() {
+	printf("|\n");
+	printf("+---------------------------------------------+\n");
+	printf("|   Imagem em grayscale salva com sucesso !   |\n");
+	printf("+---------------------------------------------+\n");
 }
 
 void mensagemErroCriacaoImagemGrayscale() {
@@ -67,11 +51,4 @@ void mensagemErroCriacaoImagemGrayscale() {
 	printf("|   Erro ao criar imagem grayscale   |\n");
 	printf("+------------------------------------+\n");
 	exit(1);
-}
-
-void mensagemSucessoCriacaoImagemGrayscale() {
-	printf("|\n");
-	printf("+---------------------------------------------+\n");
-	printf("|   Imagem em grayscale salva com sucesso !   |\n");
-	printf("+---------------------------------------------+\n");
 }

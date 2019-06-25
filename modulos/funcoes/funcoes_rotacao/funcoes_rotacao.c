@@ -24,18 +24,38 @@ void rotacionaImagem(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 	}
 }
 
+int pegaRotacaoUsuario() {
+
+	imprimeOpcoesRotacao();
+
+	int rotacao;
+	scanf("%d", &rotacao);
+
+	return rotacao;
+}
+
+void imprimeOpcoesRotacao() {
+	printf("|\n");
+	printf(">>> Informe o angulo de rotacao (90/180/270): ");
+}
+
 void rotaciona90(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
+
+	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, ROTACAO_90);
+
+	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
+	adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
+
+	rotacionaPixels90(arquivo_imagem_rotacionada, imagem, cabecalho);
+}
+
+void rotacionaPixels90(FILE *arquivo_imagem_rotacionada, Imagem imagem, Cabecalho cabecalho) {
 
 	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
 	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
 
 	int tamanho_largura_nova = tamanho_largura_original-1;
 	int tamanho_altura_nova = 0;
-
-	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, "90");
-
-	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
-	adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
 
 	for (int i = 0; i < tamanho_largura_original; i++) {
 		for (int j = 0; j < tamanho_altura_original; j++) {
@@ -53,15 +73,20 @@ void rotaciona90(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 
 void rotaciona180(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 
+	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, ROTACAO_180);
+
+	adicionaCabecalhoNaImagem(arquivo_imagem_rotacionada, cabecalho);
+
+	rotacionaPixels180(arquivo_imagem_rotacionada, imagem, cabecalho);
+}
+
+void rotacionaPixels180(FILE *arquivo_imagem_rotacionada, Imagem imagem, Cabecalho cabecalho) {
+
 	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
 	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
 
 	int tamanho_largura_nova = tamanho_largura_original-1;
 	int tamanho_altura_nova = tamanho_altura_original-1;
-
-	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, "180");
-
-	adicionaCabecalhoNaImagem(arquivo_imagem_rotacionada, cabecalho);
 
 	for (int i = 0; i < tamanho_altura_original; i++) {
 		for (int j = 0; j < tamanho_largura_original; j++) {
@@ -79,16 +104,21 @@ void rotaciona180(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 
 void rotaciona270(char nome_imagem[50], Imagem imagem, Cabecalho cabecalho) {
 
+	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, ROTACAO_270);
+
+	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
+	adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
+
+	rotacionaPixels270(arquivo_imagem_rotacionada, imagem, cabecalho);
+}
+
+void rotacionaPixels270(FILE *arquivo_imagem_rotacionada, Imagem imagem, Cabecalho cabecalho) {
+
 	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
 	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
 
 	int tamanho_largura_nova = 0;
 	int tamanho_altura_nova = tamanho_altura_original-1;
-
-	FILE *arquivo_imagem_rotacionada = criaArquivoImagemRotacionada(nome_imagem, "270");
-
-	Cabecalho cabecalho_dimensoes_invertidas = criaCabecalhoComDimensoesInvertidas(cabecalho);
-	adicionaCabecalhoNovoNaImagem(arquivo_imagem_rotacionada, cabecalho_dimensoes_invertidas);
 
 	for (int i = 0; i < tamanho_largura_original; i++) {
 		for (int j = 0; j < tamanho_altura_original; j++) {
@@ -108,26 +138,6 @@ void gravaRGB(FILE *arquivo_imagem_rotacionada, Imagem imagem, int tamanho_altur
 	fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova].R);
 	fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova].G);
 	fprintf(arquivo_imagem_rotacionada, "%d\n", imagem.pixels[tamanho_altura_nova][tamanho_largura_nova].B);
-}
-
-Cabecalho criaCabecalhoComDimensoesInvertidas(Cabecalho cabecalho) {
-
-	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
-	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
-
-	// Inverte as dimensões da imagem no cabeçalho
-	char tamanho_largura_string[10];
-	char tamanho_altura_string[10];
-	itoa(tamanho_altura_original, tamanho_largura_string, 10);
-	itoa(tamanho_largura_original, tamanho_altura_string, 10);
-
-	Cabecalho cabecalho_novo;
-	strcpy(cabecalho_novo.formato_textual, cabecalho.formato_textual);
-	strcpy(cabecalho_novo.tamanho_imagem_largura, tamanho_largura_string);
-	strcpy(cabecalho_novo.tamanho_imagem_altura, tamanho_altura_string);
-	strcpy(cabecalho_novo.nivel_qualidade_imagem, cabecalho.nivel_qualidade_imagem);
-
-	return cabecalho_novo;
 }
 
 FILE* criaArquivoImagemRotacionada(char nome_imagem[50], char rotacao[5]) {
@@ -153,33 +163,31 @@ FILE* criaArquivoImagemRotacionada(char nome_imagem[50], char rotacao[5]) {
 	return arquivo_imagem_rotacionada;
 }
 
-int pegaRotacaoUsuario() {
+Cabecalho criaCabecalhoComDimensoesInvertidas(Cabecalho cabecalho) {
 
-	imprimeOpcoesRotacao();
+	int tamanho_largura_original = atoi(cabecalho.tamanho_imagem_largura);
+	int tamanho_altura_original = atoi(cabecalho.tamanho_imagem_altura);
 
-	int rotacao;
-	scanf("%d", &rotacao);
+	// Inverte as dimensões da imagem no cabeçalho
+	char tamanho_largura_string[10];
+	char tamanho_altura_string[10];
+	itoa(tamanho_altura_original, tamanho_largura_string, 10);
+	itoa(tamanho_largura_original, tamanho_altura_string, 10);
 
-	return rotacao;
+	Cabecalho cabecalho_novo;
+	strcpy(cabecalho_novo.formato_textual, cabecalho.formato_textual);
+	strcpy(cabecalho_novo.tamanho_imagem_largura, tamanho_largura_string);
+	strcpy(cabecalho_novo.tamanho_imagem_altura, tamanho_altura_string);
+	strcpy(cabecalho_novo.nivel_qualidade_imagem, cabecalho.nivel_qualidade_imagem);
+
+	return cabecalho_novo;
 }
 
-void imprimeOpcoesRotacao() {
+void mensagemSucessoRotacaoImagem() {
 	printf("|\n");
-	printf(">>> Informe o angulo de rotacao (90/180/270): ");
-}
-
-void adicionaCabecalhoNovoNaImagem(FILE *arquivo_imagem_rotacionada, Cabecalho cabecalho_dimensoes_invertidas) {
-
-	fprintf(arquivo_imagem_rotacionada, "%s", cabecalho_dimensoes_invertidas.formato_textual);
-
-	char tamanho_imagem[12] = "";
-	strcat(tamanho_imagem, cabecalho_dimensoes_invertidas.tamanho_imagem_largura);
-	strcat(tamanho_imagem, " ");
-	strcat(tamanho_imagem, cabecalho_dimensoes_invertidas.tamanho_imagem_altura);
-	strcat(tamanho_imagem, "\n");
-	fprintf(arquivo_imagem_rotacionada, "%s", tamanho_imagem);
-	
-	fprintf(arquivo_imagem_rotacionada, "%s", cabecalho_dimensoes_invertidas.nivel_qualidade_imagem);
+	printf("+--------------------------------------------+\n");
+	printf("|   A imagem foi rotacionada com sucesso !   |\n");
+	printf("+--------------------------------------------+\n");
 }
 
 void mensagemErroCriacaoImagemRotacionada() {
@@ -188,11 +196,4 @@ void mensagemErroCriacaoImagemRotacionada() {
 	printf("|   Erro ao criar imagem rotacionada   |\n");
 	printf("+--------------------------------------+\n");
 	exit(1);
-}
-
-void mensagemSucessoRotacaoImagem() {
-	printf("|\n");
-	printf("+--------------------------------------------+\n");
-	printf("|   A imagem foi rotacionada com sucesso !   |\n");
-	printf("+--------------------------------------------+\n");
 }
