@@ -8,6 +8,7 @@
 #include "modulos/funcoes/funcoes_grayscale/funcoes_grayscale.h"
 #include "modulos/funcoes/funcoes_rotacao/funcoes_rotacao.h"
 #include "modulos/funcoes/funcoes_ampliacao/funcoes_ampliacao.h"
+#include "modulos/funcoes/funcoes_reducao/funcoes_reducao.h"
 
 void mensagemErroAberturaImagem();
 
@@ -51,6 +52,10 @@ int main() {
 
 				case 3:
 					ampliaImagem(nome_imagem, imagem, cabecalho);
+					break;
+
+				case 4:
+					reduzImagem(nome_imagem, imagem, cabecalho);
 					break;
 
 				case 8:

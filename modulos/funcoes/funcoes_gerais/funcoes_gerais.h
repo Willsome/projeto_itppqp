@@ -8,6 +8,7 @@
 #include "../../structs/typedefs.h"
 #include "../funcoes_grayscale/funcoes_grayscale.h"
 #include "../funcoes_ampliacao/funcoes_ampliacao.h"
+#include "../funcoes_reducao/funcoes_reducao.h"
 
 FILE* pegaImagemPeloNome();
 

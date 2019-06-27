@@ -19,4 +19,7 @@
 #define PASTA_IMAGEM_AMPLIADA "ampliada"
 #define SUFIXO_IMAGEM_AMPLIADA "_ampliada"
 
+#define PASTA_IMAGEM_REDUZIDA "reduzida"
+#define SUFIXO_IMAGEM_REDUZIDA "_reduzida"
+
 #endif

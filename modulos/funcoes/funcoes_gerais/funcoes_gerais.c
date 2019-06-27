@@ -34,10 +34,9 @@ void mostraMenu() {
 	printf("1 - Transformar em escala de cinza\n");
 	printf("2 - Rotacionar (anti-horario)\n");
 	printf("3 - Ampliar\n");
-	printf("4 - Binarizacao usando thresholding\n");
+	printf("4 - Reduzir\n");
 	printf("5 - Blurring\n");
-	printf("6 - Executa sharpening\n");
-	printf("7 - Reduzir a imagem\n");
+	printf("6 - Sharpening\n");
 	printf("8 - Sair\n");
 	printf("\n");
 }
@@ -201,6 +200,9 @@ FILE* criaArquivoImagem(char nome_imagem[50], char pasta_imagem[50], char sufixo
 		
 		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_AMPLIADA) == 0) {
 			mensagemErroCriacaoImagemAmpliada();
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_REDUZIDA) == 0) {
+			mensagemErroCriacaoImagemReduzida();
 		}
 	}
 
