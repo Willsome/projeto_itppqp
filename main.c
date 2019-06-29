@@ -9,6 +9,10 @@
 #include "modulos/funcoes/funcoes_rotacao/funcoes_rotacao.h"
 #include "modulos/funcoes/funcoes_ampliacao/funcoes_ampliacao.h"
 #include "modulos/funcoes/funcoes_reducao/funcoes_reducao.h"
+#include "modulos/funcoes/funcoes_blurring/funcoes_blurring.h"
+#include "modulos/funcoes/funcoes_inversao/funcoes_inversao.h"
+#include "modulos/funcoes/funcoes_inversao_cor/funcoes_inversao_cor.h"
+#include "modulos/funcoes/funcoes_destaca_bw/funcoes_destaca_bw.h"
 
 void mensagemErroAberturaImagem();
 
@@ -58,7 +62,27 @@ int main() {
 					reduzImagem(nome_imagem, imagem, cabecalho);
 					break;
 
+				case 5:
+					blurarImagem(nome_imagem, imagem, cabecalho);
+					break;
+
+				case 6:
+					sharpenaImagem(nome_imagem, imagem, cabecalho);
+					break;
+
+				case 7:
+					inverteImagem(nome_imagem, imagem, cabecalho);
+					break;
+
 				case 8:
+					inverteCorImagem(nome_imagem, imagem, cabecalho);
+					break;
+
+				case 9:
+					destacaBwImagem(nome_imagem, imagem, cabecalho);
+					break;
+
+				case 666:
 					break;
 
 				default:

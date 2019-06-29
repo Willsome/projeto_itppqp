@@ -1,7 +1,7 @@
 #ifndef _CONSTANTES_H_
 #define _CONSTANTES_H_
 
-#define SAIR 8
+#define SAIR 666
 
 #define LINHA_QUE_COMECAM_OS_PIXEIS 4
 
@@ -21,5 +21,20 @@
 
 #define PASTA_IMAGEM_REDUZIDA "reduzida"
 #define SUFIXO_IMAGEM_REDUZIDA "_reduzida"
+
+#define PASTA_IMAGEM_BLURADA "blurada"
+#define SUFIXO_IMAGEM_BLURADA "_blurada"
+
+#define PASTA_IMAGEM_SHARPENADA "sharpenada"
+#define SUFIXO_IMAGEM_SHARPENADA "_sharpenada"
+
+#define PASTA_IMAGEM_INVERTIDA "invertida"
+#define SUFIXO_IMAGEM_INVERTIDA "_invertida"
+
+#define PASTA_IMAGEM_COR_INVERTIDA "cor_invertida"
+#define SUFIXO_IMAGEM_COR_INVERTIDA "_cor_invertida"
+
+#define PASTA_IMAGEM_DESTACADA_BW "destacada_bw"
+#define SUFIXO_IMAGEM_DESTACADA_BW "_destacada_bw"
 
 #endif

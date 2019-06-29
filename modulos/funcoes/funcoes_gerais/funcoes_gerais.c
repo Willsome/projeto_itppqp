@@ -21,7 +21,7 @@ FILE* pegaImagemPeloNome(char nome_imagem[50]) {
 }
 
 int pegaOpcaoUsuario() {
-	mostraMenu();
+	mostraMenu(10);
 
 	int opcao;
 	scanf("%d", &opcao);
@@ -29,16 +29,46 @@ int pegaOpcaoUsuario() {
 	return opcao;
 }
 
-void mostraMenu() {
-	printf("\n");
-	printf("1 - Transformar em escala de cinza\n");
-	printf("2 - Rotacionar (anti-horario)\n");
-	printf("3 - Ampliar\n");
-	printf("4 - Reduzir\n");
-	printf("5 - Blurring\n");
-	printf("6 - Sharpening\n");
-	printf("8 - Sair\n");
-	printf("\n");
+void mostraMenu(int opcoes_do_menu) {
+
+		if (opcoes_do_menu > 1) {
+			mostraMenu(opcoes_do_menu-1);
+		}
+
+		if (opcoes_do_menu == 1) {
+			printf("\n");
+			printf("1 - Transformar em escala de cinza\n");
+		
+		} else if (opcoes_do_menu == 2) {
+			printf("2 - Rotacionar (anti-horario)\n");
+		
+		} else if (opcoes_do_menu == 3) {
+			printf("3 - Ampliar\n");
+		
+		} else if (opcoes_do_menu == 4) {
+			printf("4 - Reduzir\n");
+		
+		} else if (opcoes_do_menu == 5) {
+			printf("5 - Blurring\n");
+		
+		} else if (opcoes_do_menu == 6) {
+			printf("6 - Sharpening\n");
+		
+		} else if (opcoes_do_menu == 7) {
+			printf("7 - Inverter imagem\n");
+		
+		} else if (opcoes_do_menu == 8) {
+			printf("8 - Inverter cor da imagem\n");
+		
+		} else if (opcoes_do_menu == 9) {
+			printf("9 - Destacar imagem com B/W\n");
+		
+		} else if (opcoes_do_menu == 10) {
+			printf("666 - Sair\n");
+			printf("\n");
+		}
+
+		return;
 }
 
 void preencheStructsCabecalhoImagem(FILE *arquivo_imagem, Cabecalho *cabecalho, Imagem *imagem) {
@@ -134,6 +164,18 @@ void alocaPixelsDaImagem(Imagem *imagem, Cabecalho *cabecalho) {
 	}
 }
 
+void copiaImagemRGB(Imagem *imagem_tmp, Imagem imagem, Cabecalho cabecalho) {
+
+	int largura = atoi(cabecalho.tamanho_imagem_largura);
+	int altura = atoi(cabecalho.tamanho_imagem_altura);
+
+	for (int i = 0; i < altura; i++) {
+		for (int j = 0; j < largura; j++) {
+			imagem_tmp->pixels[i][j] = imagem.pixels[i][j];
+		}
+	}
+}
+
 void preencheImagemComRGB(char dados[20], Cabecalho *cabecalho, Imagem *imagem,
 	PosicaoAtualPixel *posicao_atual_pixel, Pixel *pixel, int *cor_linha_atual, long *cont) {
 
@@ -203,6 +245,21 @@ FILE* criaArquivoImagem(char nome_imagem[50], char pasta_imagem[50], char sufixo
 		
 		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_REDUZIDA) == 0) {
 			mensagemErroCriacaoImagemReduzida();
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_BLURADA) == 0) {
+			mensagemErroCriacaoImagemBlurada();
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_SHARPENADA) == 0) {
+			mensagemErroCriacaoImagemSharpenada();
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_INVERTIDA) == 0) {
+			mensagemErroCriacaoImagemInvertida();
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_COR_INVERTIDA) == 0) {
+			mensagemErroCriacaoImagemCorInvertida();
+		
+		} else if (strcmp(pasta_imagem, PASTA_IMAGEM_DESTACADA_BW) == 0) {
+			mensagemErroCriacaoImagemDestacadaBw();
 		}
 	}
 
